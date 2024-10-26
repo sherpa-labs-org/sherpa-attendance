@@ -39,7 +39,7 @@ export default function ConversationPreviewsColumn({ conversations }: { conversa
   };
 
   return (
-    <div className="flex flex-col min-w-96 border-r border-b-foreground/10">
+    <div className="flex flex-col min-w-96 border-r border-b-foreground/10 h-full">
       <div className="flex items-center justify-between p-4 border-b border-b-foreground/10">
         <h2 className="font-bold text-lg">Conversations</h2>
         <button className="text-primary">New conversation</button>

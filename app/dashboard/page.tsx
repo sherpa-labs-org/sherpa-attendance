@@ -6,9 +6,10 @@ import ConversationPane from '@/app/dashboard/_components/conversation-pane'
 import dummyConversations from '@/lib/dummy_data';
 
 export default function Page() {
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(dummyConversations[0]);
   return (
-    <ConversationPane conversation={selectedConversation ? selectedConversation : null} />
+    <div>
+      Dashboard
+    </div>
   )
 }
 
@@ -100,9 +101,9 @@ export function Conversations() {
       in_progress: 0,
       completed: 0
     };
-    conversations.forEach(conv => {
-      counts[conv.status]++;
-    });
+    // conversations.forEach(conv => {
+    //   counts[conv.status]++;
+    // });
     return counts;
   };
 
@@ -191,49 +192,49 @@ export function Conversations() {
     }
   }
 
-  const handleStatusChange = async (conversationId: string, newStatus: StatusKey) => {
-    const { error } = await supabase
-      .from('conversations')
-      .update({ status: newStatus })
-      .eq('id', conversationId);
+  // const handleStatusChange = async (conversationId: string, newStatus: StatusKey) => {
+  //   const { error } = await supabase
+  //     .from('conversations')
+  //     .update({ status: newStatus })
+  //     .eq('id', conversationId);
 
-    if (error) {
-      console.error('Error updating conversation status:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update conversation status. Please try again.",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "Conversation status updated successfully.",
-      });
-      fetchConversations(); // Refresh the conversations list
-    }
-  };
+  //   if (error) {
+  //     console.error('Error updating conversation status:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to update conversation status. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } else {
+  //     toast({
+  //       title: "Success",
+  //       description: "Conversation status updated successfully.",
+  //     });
+  //     fetchConversations(); // Refresh the conversations list
+  //   }
+  // };
 
-  const handleRfaChange = async (conversationId: string, newRfa: string) => {
-    const { error } = await supabase
-      .from('conversations')
-      .update({ rfa: newRfa })
-      .eq('id', conversationId);
+  // const handleRfaChange = async (conversationId: string, newRfa: string) => {
+  //   const { error } = await supabase
+  //     .from('conversations')
+  //     .update({ rfa: newRfa })
+  //     .eq('id', conversationId);
 
-    if (error) {
-      console.error('Error updating conversation RFA:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update reason for absence. Please try again.",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "Reason for absence updated successfully.",
-      });
-      fetchConversations(); // Refresh the conversations list
-    }
-  };
+  //   if (error) {
+  //     console.error('Error updating conversation RFA:', error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to update reason for absence. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } else {
+  //     toast({
+  //       title: "Success",
+  //       description: "Reason for absence updated successfully.",
+  //     });
+  //     fetchConversations(); // Refresh the conversations list
+  //   }
+  // };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -394,7 +395,7 @@ export function Conversations() {
                 <TableCell>
                   <Select
                     value={conversation.status}
-                    onValueChange={(value: StatusKey) => handleStatusChange(conversation.id, value)}
+                    // onValueChange={(value: StatusKey) => handleStatusChange(conversation.id, value)}
                   >
                     <SelectTrigger className="w-[180px] border-none bg-secondary">
                       <SelectValue placeholder="Select status" />
@@ -411,7 +412,7 @@ export function Conversations() {
                 <TableCell>
                   <Select
                     value={conversation.rfa || ''}
-                    onValueChange={(value) => handleRfaChange(conversation.id, value)}
+                    // onValueChange={(value) => handleRfaChange(conversation.id, value)}
                   >
                     <SelectTrigger className="w-[250px]">
                       <div

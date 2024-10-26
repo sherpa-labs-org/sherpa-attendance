@@ -10,6 +10,7 @@ export default async function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
+
     return (
         <>
             {/* Header spanning full width */}
@@ -28,7 +29,7 @@ export default async function DashboardLayout({
             </header>
             
             {/* Content area with sidebar and main content using responsive grid */}
-            <div className="flex-1 flex"> {/* Jonah: flex-1 doesn't do anything because it's not the child of a flexbox? */}
+            <div className="flex-1 flex">
                 {/* Sidebar */}
                 <aside className="w-64 flex-shrink-0">
                     <Sidebar />
@@ -36,11 +37,8 @@ export default async function DashboardLayout({
                 
                 {/* Main content */}
                 <main className="flex-grow overflow-hidden">
-                    <div className="flex flex-row">
-                        <ConversationPreviewsColumn conversations={dummyConversations} />
-                        {children}
-                    </div>
                     
+                    {children}
                 </main>
             </div>
         </>

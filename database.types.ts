@@ -9,54 +9,94 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      conversations: {
+      absences: {
         Row: {
-          absence_id: string | null
+          completed: boolean
           created_at: string
           guardian_id: string
           id: string
-          recommended_action:
-            | Database["public"]["Enums"]["recommended_actions"]
-            | null
-          rfa: string | null
+          reason: string | null
+          recommended_action: string | null
           school_id: string
-          status: Database["public"]["Enums"]["conversation_status"]
+          specialist_in_charge: string | null
           student_id: string
-          topic: string
-          updated_at: string
-          user_id: string | null
         }
         Insert: {
-          absence_id?: string | null
+          completed?: boolean
           created_at?: string
           guardian_id: string
           id?: string
-          recommended_action?:
-            | Database["public"]["Enums"]["recommended_actions"]
-            | null
-          rfa?: string | null
+          reason?: string | null
+          recommended_action?: string | null
           school_id: string
-          status: Database["public"]["Enums"]["conversation_status"]
+          specialist_in_charge?: string | null
           student_id: string
-          topic: string
-          updated_at?: string
-          user_id?: string | null
         }
         Update: {
-          absence_id?: string | null
+          completed?: boolean
           created_at?: string
           guardian_id?: string
           id?: string
-          recommended_action?:
-            | Database["public"]["Enums"]["recommended_actions"]
-            | null
-          rfa?: string | null
+          reason?: string | null
+          recommended_action?: string | null
           school_id?: string
-          status?: Database["public"]["Enums"]["conversation_status"]
+          specialist_in_charge?: string | null
           student_id?: string
-          topic?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "absences_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absences_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absences_specialist_in_charge_fkey"
+            columns: ["specialist_in_charge"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          guardian_id: string
+          id: string
+          label: Database["public"]["Enums"]["conversation_label"] | null
+          language: string | null
+          school_id: string
+          students: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          guardian_id: string
+          id?: string
+          label?: Database["public"]["Enums"]["conversation_label"] | null
+          language?: string | null
+          school_id: string
+          students?: string[] | null
           updated_at?: string
-          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          guardian_id?: string
+          id?: string
+          label?: Database["public"]["Enums"]["conversation_label"] | null
+          language?: string | null
+          school_id?: string
+          students?: string[] | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -73,17 +113,11 @@ export type Database = {
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "conversations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       districts: {
         Row: {
+          address: string | null
           created_at: string | null
           data_provider: string | null
           district_contact_email: string | null
@@ -95,9 +129,11 @@ export type Database = {
           launch_date: string
           logo_url: string | null
           name: string
+          phone: string | null
           updated_at: string | null
         }
         Insert: {
+          address?: string | null
           created_at?: string | null
           data_provider?: string | null
           district_contact_email?: string | null
@@ -109,9 +145,11 @@ export type Database = {
           launch_date: string
           logo_url?: string | null
           name: string
+          phone?: string | null
           updated_at?: string | null
         }
         Update: {
+          address?: string | null
           created_at?: string | null
           data_provider?: string | null
           district_contact_email?: string | null
@@ -123,6 +161,7 @@ export type Database = {
           launch_date?: string
           logo_url?: string | null
           name?: string
+          phone?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -172,29 +211,35 @@ export type Database = {
         Row: {
           created_at: string
           email: string | null
-          first_name: string | null
+          first_name: string
           id: string
           last_name: string | null
-          phone_number: string
+          phone: string
+          relationship: string | null
           school_id: string
+          students: string[] | null
         }
         Insert: {
           created_at?: string
           email?: string | null
-          first_name?: string | null
+          first_name: string
           id?: string
           last_name?: string | null
-          phone_number: string
+          phone: string
+          relationship?: string | null
           school_id: string
+          students?: string[] | null
         }
         Update: {
           created_at?: string
           email?: string | null
-          first_name?: string | null
+          first_name?: string
           id?: string
           last_name?: string | null
-          phone_number?: string
+          phone?: string
+          relationship?: string | null
           school_id?: string
+          students?: string[] | null
         }
         Relationships: [
           {
@@ -208,36 +253,49 @@ export type Database = {
       }
       messages: {
         Row: {
+          absence_id: string | null
           content: string
-          conversation_id: string | null
+          conversation_id: string
           created_at: string
           id: string
+          inquiry: boolean
           sendblue_message_handle: string | null
           sender_type: Database["public"]["Enums"]["type"]
           status: string
           was_downgraded: boolean | null
         }
         Insert: {
+          absence_id?: string | null
           content: string
-          conversation_id?: string | null
+          conversation_id: string
           created_at?: string
           id?: string
+          inquiry?: boolean
           sendblue_message_handle?: string | null
           sender_type: Database["public"]["Enums"]["type"]
           status: string
           was_downgraded?: boolean | null
         }
         Update: {
+          absence_id?: string | null
           content?: string
-          conversation_id?: string | null
+          conversation_id?: string
           created_at?: string
           id?: string
+          inquiry?: boolean
           sendblue_message_handle?: string | null
           sender_type?: Database["public"]["Enums"]["type"]
           status?: string
           was_downgraded?: boolean | null
         }
         Relationships: [
+          {
+            foreignKeyName: "messages_absence_id_fkey"
+            columns: ["absence_id"]
+            isOneToOne: false
+            referencedRelation: "absences"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "messages_conversation_id_fkey"
             columns: ["conversation_id"]
@@ -250,32 +308,38 @@ export type Database = {
       schools: {
         Row: {
           address: string | null
+          auto_approve: boolean | null
           created_at: string | null
           district_id: string | null
           id: string
           id_in_data_provider: string | null
           logo_url: string | null
           name: string
+          phone: string | null
           updated_at: string | null
         }
         Insert: {
           address?: string | null
+          auto_approve?: boolean | null
           created_at?: string | null
           district_id?: string | null
           id?: string
           id_in_data_provider?: string | null
           logo_url?: string | null
           name: string
+          phone?: string | null
           updated_at?: string | null
         }
         Update: {
           address?: string | null
+          auto_approve?: boolean | null
           created_at?: string | null
           district_id?: string | null
           id?: string
           id_in_data_provider?: string | null
           logo_url?: string | null
           name?: string
+          phone?: string | null
           updated_at?: string | null
         }
         Relationships: [
@@ -334,13 +398,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "users_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: false
@@ -357,11 +414,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      conversation_status:
-        | "in_progress"
-        | "action_needed"
-        | "completed"
-        | "awaiting_message_approval"
+      conversation_label: "action_needed" | "awaiting_approval"
       recommended_actions: "mark_as_completed" | "attendance_officer_take_over"
       type: "guardian" | "admin"
       user_role:
@@ -456,4 +509,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
