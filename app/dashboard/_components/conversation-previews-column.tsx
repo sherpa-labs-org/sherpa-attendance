@@ -14,43 +14,47 @@ type StatusKey = keyof typeof statusMapping;
 type FilterOption = StatusKey | 'all';
 const filterOptions: FilterOption[] = ['all', ...Object.keys(statusMapping) as StatusKey[]];
 
+export default function ConversationPreviewsColumn({ conversations, onSelectConversation }: { conversations: Conversation[], onSelectConversation: (conversation: Conversation) => void }) {
 
-export default function ConversationPreviewsColumn({ conversations }: { conversations: Conversation[] }) {
+  const [statusFilter, setStatusFilter] = useState<FilterOption>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
 
-  const [activeFilter, setActiveFilter] = useState<FilterOption>("all");
+  // const getStatusCounts = () => {
+  //   const counts = {
+  //     awaiting_message_approval: 0,
+  //     action_needed: 0,
+  //     in_progress: 0,
+  //     completed: 0
+  //   };
+  //   return counts;
+  // };
 
-  const getStatusCounts = () => {
-    const counts = {
-      awaiting_message_approval: 0,
-      action_needed: 0,
-      in_progress: 0,
-      completed: 0
-    };
-    // conversations.forEach(conv => {
-    //   counts[conv.status]++;
-    // });
-    return counts;
-  };
-
-  const statusCounts = getStatusCounts();
+  // const statusCounts = getStatusCounts();
 
   const handleFilterClick = (filter: FilterOption) => {
-    setActiveFilter(filter);
+    setStatusFilter(filter);
+  };
+
+  const handleConversationClick = (conversation: Conversation) => {
+    setSelectedConversation(conversation);
+    onSelectConversation(conversation);
   };
 
   return (
     <div className="flex flex-col min-w-96 border-r border-b-foreground/10 h-full">
-      <div className="flex items-center justify-between p-4 border-b border-b-foreground/10">
+      <div className="flex items-center justify-between p-4 border-b-foreground/10">
         <h2 className="font-bold text-lg">Conversations</h2>
         <button className="text-primary">New conversation</button>
       </div>
+      
       {/* Filters */}
       <div className='flex flex-row w-full border-b border-border mb-2'>
           {filterOptions.map((filter) => (
             <Button
               key={filter}
               variant='ghost'
-              className={`rounded-none font-normal px-4 py-2 ${activeFilter === filter ? 'border-b-2 border-black' : 'border-b-2 border-transparent'}`}
+              className={`rounded-none font-normal px-4 py-2 ${statusFilter === filter ? 'border-b-2 border-black' : 'border-b-2 border-transparent'}`}
               onClick={() => handleFilterClick(filter)}
             >
               {filter === 'all' ? 'All' : statusMapping[filter]}
@@ -62,10 +66,26 @@ export default function ConversationPreviewsColumn({ conversations }: { conversa
             </Button>
           ))}
         </div>
+        {/* Search Bar */}
+        <div className="p-4 border-b">
+          <input
+            type="text"
+            placeholder="Search conversations..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full py-2 px-4 border border-gray-300 rounded-md"
+          />
+        </div>
       <div className="flex flex-col">
-        {conversations.map((conversation) => (
-          <ConversationPreview key={conversation.id} conversation={conversation} />
-        ))}
+        {conversations
+          .filter(conversation => 
+            conversation.guardian_name.toLowerCase().includes(searchQuery.toLowerCase()) // Assuming conversations have a 'title' property
+          )
+          .map((conversation) => (
+            <div key={conversation.id} onClick={() => handleConversationClick(conversation)}>
+              <ConversationPreview conversation={conversation} selected={selectedConversation === conversation} />
+            </div>
+          ))}
       </div>
     </div>
   );

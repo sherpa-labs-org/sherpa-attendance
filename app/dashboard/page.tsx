@@ -13,7 +13,7 @@ export default function Page() {
   )
 }
 
-
+{/* old stuff */}
 
 import { useEffect, useState, useRef } from 'react'
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"

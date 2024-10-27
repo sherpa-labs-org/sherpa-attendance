@@ -11,7 +11,10 @@ export default function Page() {
 
   return (
     <div className="flex flex-row h-full">
-        <ConversationPreviewsColumn conversations={dummyConversations} />
+        <ConversationPreviewsColumn 
+          conversations={dummyConversations} 
+          onSelectConversation={setSelectedConversation} // Pass the setter function
+        />
         <ConversationPane conversation={selectedConversation ? selectedConversation : null} />
     </div>
   )
